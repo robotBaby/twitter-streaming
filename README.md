@@ -1,6 +1,11 @@
 # twitter-streaming
 
-FIXME: description
+start zookeeper at "localhost:2181" bin/zookeeper-server-start.sh config/zookeeper.properties
+start kafka at "localhost:9092" bin/kafka-server-start.sh config/server.properties
+
+refer to http://kafka.apache.org/documentation.html#quickstart for more instructions
+
+run as lein clean && lein run
 
 ## Installation
 
