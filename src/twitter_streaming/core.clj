@@ -48,10 +48,10 @@
                  "partitioner.class" "kafka.producer.DefaultPartitioner"}))
 (defn -main
   []
-  (let [consumer-key "kgPY3tAKH3szyJLSpBSQiJRft"
-        consumer-secret "6GJFpJIaPNvWHs7zfsvrXbLMs06uiCKl7w8LbyBxdQH2OwW59K"
-        user-access-token "2655196867-DSc4lfoG7wexkkmEGwlUTGJt4VyA8vH1T4YJlbq"
-        user-access-token-secret "UVlaVW4xaqXE5HQztwmGgsahMlf3v1kRXoeEKQOU3Mlk1"
+  (let [consumer-key ""
+        consumer-secret ""
+        user-access-token ""
+        user-access-token-secret ""
         p (new-kafka-producer host zk-port kafka-port kafka-topic)]
     (streaming consumer-key consumer-secret user-access-token user-access-token-secret
                p kafka-topic)))
