@@ -14,7 +14,11 @@
   [consumer-key consumer-secret user-access-token user-access-token-secret
    kafka-producer kafka-topic]
 
-  (let [listener (proxy [StatusListener]
+  (let [track-terms (into-array ["ISIS" "Extremists" "Millitants"])
+        filter (doto (FilterQuery.)
+                 (.count 0)
+                 (.track track-terms))
+        listener (proxy [StatusListener]
                      []
                    (onStatus [status]
                      (let [tweet-text (.getText status)]
@@ -33,7 +37,7 @@
                    .build)]
     (doto (.getInstance (TwitterStreamFactory. config))
       (.addListener listener)
-      (.sample))))
+      (.filter filter))))
 
 (def host "localhost")
 (def zk-port 2181)
