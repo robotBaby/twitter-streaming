@@ -6,6 +6,8 @@ start kafka at "localhost:9092" bin/kafka-server-start.sh config/server.properti
 
 refer to http://kafka.apache.org/documentation.html#quickstart for more instructions
 
+refer to https://devcenter.heroku.com/articles/clojure-web-application#connecting-to-postgresql-with-clojure-java-jdbc for setting up a postgresql server 
+
 run as lein clean && lein run
 
 
