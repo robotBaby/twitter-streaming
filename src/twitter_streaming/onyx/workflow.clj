@@ -1,5 +1,5 @@
 (ns twitter-streaming.onyx.workflow)
 
 (def workflow
-  [[:read-messages :identity]
-   [:identity :out]])
+  [[:read-messages :count-words]
+   [:count-words :out]])

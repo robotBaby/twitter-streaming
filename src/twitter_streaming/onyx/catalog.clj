@@ -20,16 +20,17 @@
     :kafka/deserializer-fn :twitter-streaming.onyx.functions/deserialize-message
     :onyx/min-peers 1
     :onyx/max-peers 1
-    :onyx/batch-size 100
+    :onyx/batch-size 1000
     :onyx/doc "Reads messages from a Kafka topic"}
 
-   {:onyx/name :identity
-    :onyx/fn :clojure.core/identity
+   {:onyx/name :count-words
+    :onyx/fn :twitter-streaming.onyx.functions/count-word
     :onyx/type :function
-    :onyx/batch-size 100}
+    :onyx/uniqueness-key :n
+    :onyx/batch-size 1000}
 
    {:onyx/name :out
     :onyx/plugin :onyx.plugin.core-async/output
     :onyx/type :output
     :onyx/medium :core.async
-    :onyx/batch-size 100}])
+    :onyx/batch-size 1000}])

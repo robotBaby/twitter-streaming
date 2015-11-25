@@ -5,6 +5,7 @@
             [twitter-streaming.onyx.catalog :as cat]
             [twitter-streaming.onyx.workflow :as wf]
             [twitter-streaming.onyx.flowcondition :as fl]
+            [clojure.java.jdbc :as sql]
             [onyx.plugin.kafka]
             [onyx.api]))
 
@@ -18,11 +19,21 @@
 (def out-calls
   {:lifecycle/before-task-start inject-out-ch})
 
+;;; Writing to db
+(defn db [event lifecycle]
+  {:onyx.core/params [{:host "localhost" :port "5432" :db-name "wordcount"} ]})
+
+(def db-calls
+  {:lifecycle/before-task-start db})
+
+
 ;;;;;;; Declaring lifecycle
 
 (def lifecycles
   [{:lifecycle/task :read-messages
     :lifecycle/calls :onyx.plugin.kafka/read-messages-calls}
+   {:lifecycle/task :count-words
+    :lifecycle/calls :twitter-streaming.onyx.onyx/db-calls}
    {:lifecycle/task :out
     :lifecycle/calls :twitter-streaming.onyx.onyx/out-calls}
    {:lifecycle/task :out
@@ -33,17 +44,21 @@
 (defn read-output[]
   (<!! out-chan))
 
+(defn dump-window! [event window-id lower-bound upper-bound state]
+  (println (format "Window extent %s, [%s - %s] contents: %s"
+                   window-id lower-bound upper-bound state)))
+
 (defn submit []
   (let [env (onyx.api/start-env config/env-config)
         peer-group (onyx.api/start-peer-group config/peer-config)
-        v-peers (onyx.api/start-peers 10 peer-group)
+        v-peers (onyx.api/start-peers 30 peer-group)
         job {:catalog cat/catalog
              :workflow wf/workflow
              :lifecycles lifecycles
              :flow-conditions fl/flow-conditions
              :task-scheduler :onyx.task-scheduler/balanced}
         submitting (onyx.api/submit-job config/peer-config job)]
-    {:v-peers v-peers :peer-group peer-group :env env}))
+    {:done :ok}))
 
 (defn shutdown
   [{:keys [v-peers peer-group env]}]

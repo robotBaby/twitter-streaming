@@ -4,5 +4,5 @@
 
 (def flow-conditions
   [{:flow/from :read-messages
-    :flow/to [:identity]
+    :flow/to [:count-words]
     :flow/predicate :twitter-streaming.onyx.flowcondition/always-true}])
