@@ -21,7 +21,7 @@
 
 ;;; Writing to db
 (defn db [event lifecycle]
-  {:onyx.core/params [{:host "localhost" :port "5432" :db-name "wordcount"} ]})
+  {:onyx.core/params [{:host "localhost" :port "5432" :db-name "hashcollect"} ]})
 
 (def db-calls
   {:lifecycle/before-task-start db})

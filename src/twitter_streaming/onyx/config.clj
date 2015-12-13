@@ -5,7 +5,8 @@
 (def zk-port "2181")
 (def kafka-port "9092")
 (def zk-addr (str host ":" zk-port))
-(def kafka-topic "twitter-streaming11")
+(def kafka-topic "twitter-streaming3")
+(def client-to-db-topic "client-to-db2")
 (def kafka-group-id "onyx-consumer")
 
 (def env-config

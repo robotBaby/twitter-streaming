@@ -5,18 +5,16 @@
 (defn deserialize-message [bytearray]
   (fress/read bytearray))
 
+
 (defn count-word
-  [{:keys [host port db-name]} {:keys [n event-time]}]
-  (let [sentence n
-        words (map identity (clojure.string/split sentence #"\s+"))
-        db (str "postgresql://" host ":" port "/" db-name)]
-    (doseq [word words]
-      (when  (some #(= \# %) word)
-        (let [exists (sql/query db [(str "SELECT count FROM wordcount WHERE word = '" word "'")])]
-          (if (empty? exists)
-            (sql/insert! db :wordcount {:word word :count 1})
-            (sql/execute! db [(str "UPDATE wordcount SET count=" (inc (:count (first exists)))
-                                   " WHERE word= '" word "'")]))))
+  [{:keys [host port db-name]} {:keys [tracked-terms tweet-hashes]}]
+  (let [db (str "postgresql://" host ":" port "/" db-name)]
+    (doseq [word tracked-terms]
+      (let [exists (sql/query db [(str "SELECT hashes FROM hashcollect WHERE word = '" word "'")])]
+        (if (empty? exists)
+          (sql/insert! db :hashcollect {:word word :hashes (count tweet-hashes)})
+          (sql/execute! db [(str "UPDATE hashcollect SET hashes=" (+ (count tweet-hashes) (:hashes (first exists)))
+                                 " WHERE word= '" word "'")])))
       word)))
 
 ;; (defn count-word
